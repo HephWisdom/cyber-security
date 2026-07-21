@@ -3,6 +3,6 @@
   "framework": "vite",
   "installCommand": "npm ci --include=dev --workspace=@platform/shared --workspace=@platform/web",
   "buildCommand": "npm run build -w @platform/shared && npm run build -w @platform/web",
-  "outputDirectory": "apps/web/dist",
+  "outputDirectory": "dist",
   "rewrites": [{ "source": "/((?!api(?:/|$)).*)", "destination": "/index.html" }]
 }
