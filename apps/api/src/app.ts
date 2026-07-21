@@ -2,10 +2,11 @@ import { randomUUID } from 'node:crypto';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
-import rateLimit from 'express-rate-limit';
-import helmet from 'helmet';
+import type { RequestHandler } from 'express';
+import { rateLimit } from 'express-rate-limit';
+import helmetImport, { type HelmetOptions } from 'helmet';
 import mongoose from 'mongoose';
-import pinoHttp from 'pino-http';
+import { pinoHttp } from 'pino-http';
 import type { Env } from './config/env.js';
 import { createLogger } from './config/logger.js';
 import { errorHandler, HttpError, notFound } from './lib/errors.js';
@@ -16,6 +17,14 @@ import { formRoutes } from './routes/forms.js';
 import { portalRoutes } from './routes/portal.js';
 import { publicRoutes } from './routes/public.js';
 import { createEmailProvider } from './services/email.js';
+
+// Helmet's declarations differ between ESM and CommonJS resolution modes. Normalize
+// the import so clean platform builds and local builds use the same callable value.
+const helmet = (
+  typeof helmetImport === 'function'
+    ? helmetImport
+    : (helmetImport as unknown as { default: unknown }).default
+) as (options?: Readonly<HelmetOptions>) => RequestHandler;
 
 export function createApp(env: Env) {
   const app = express();
