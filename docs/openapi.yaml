@@ -1,0 +1,169 @@
+openapi: 3.1.0
+info:
+  title: Cybersecurity Platform API
+  version: 1.0.0
+  description: API contract for public intake, secure client portal, and role-protected administration.
+servers:
+  - url: /api
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: portal_session
+    csrfHeader:
+      type: apiKey
+      in: header
+      name: X-CSRF-Token
+  schemas:
+    Error:
+      type: object
+      required: [ok, error]
+      properties:
+        ok: { const: false }
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code: { type: string }
+            message: { type: string }
+        requestId: { type: string }
+    Reference:
+      type: object
+      properties:
+        ok: { const: true }
+        data:
+          type: object
+          required: [reference, status]
+          properties:
+            reference: { type: string }
+            status: { type: string }
+paths:
+  /health:
+    get:
+      summary: Liveness check
+      responses: { '200': { description: Healthy } }
+  /ready:
+    get:
+      summary: Database readiness check
+      responses: { '200': { description: Ready }, '503': { description: Not ready } }
+  /forms/contact:
+    post:
+      summary: Submit an idempotent contact request
+      parameters:
+        - in: header
+          name: Idempotency-Key
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, workEmail, organisation, topic, message, consent, idempotencyKey]
+              properties:
+                name: { type: string, maxLength: 120 }
+                workEmail: { type: string, format: email }
+                organisation: { type: string, maxLength: 160 }
+                topic: { enum: [general, services, partnership, privacy, other] }
+                message: { type: string, maxLength: 4000 }
+                consent: { const: true }
+                idempotencyKey: { type: string, format: uuid }
+      responses:
+        '201':
+          {
+            description: Persisted,
+            content: { application/json: { schema: { $ref: '#/components/schemas/Reference' } } },
+          }
+        '422':
+          {
+            description: Validation error,
+            content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } },
+          }
+  /forms/assessment:
+    post:
+      summary: Submit an assessment scope request
+      responses: { '201': { description: Persisted }, '422': { description: Validation error } }
+  /forms/incident:
+    post:
+      summary: Submit an incident response request
+      responses: { '201': { description: Persisted }, '422': { description: Validation error } }
+  /forms/vulnerability:
+    post:
+      summary: Submit a responsible disclosure report
+      responses: { '201': { description: Persisted }, '422': { description: Validation error } }
+  /public/newsletter:
+    post:
+      summary: Request a newsletter subscription
+      responses:
+        { '201': { description: Pending confirmation }, '422': { description: Validation error } }
+  /public/careers:
+    get:
+      summary: List approved, currently open career opportunities
+      responses: { '200': { description: Open roles } }
+  /public/career:
+    post:
+      summary: Apply to a currently open career opportunity
+      responses:
+        {
+          '201': { description: Application persisted },
+          '404': { description: Role not open },
+          '422': { description: Validation error },
+        }
+  /auth/login:
+    post:
+      summary: Create access and rotating refresh sessions
+      responses:
+        {
+          '200': { description: Authenticated },
+          '401': { description: Generic invalid credentials response },
+        }
+  /auth/refresh:
+    post:
+      summary: Rotate a valid refresh session
+      responses: { '200': { description: Rotated }, '401': { description: Invalid or revoked } }
+  /auth/logout:
+    post:
+      security: [{ sessionCookie: [], csrfHeader: [] }]
+      summary: Revoke current session
+      responses: { '200': { description: Revoked } }
+  /portal/summary:
+    get:
+      security: [{ sessionCookie: [] }]
+      summary: Organisation-scoped client overview
+      responses:
+        {
+          '200': { description: Overview },
+          '401': { description: Not authenticated },
+          '403': { description: No organisation access },
+        }
+  /portal/tickets:
+    get:
+      security: [{ sessionCookie: [] }]
+      summary: List support tickets within the authenticated organisation
+      responses: { '200': { description: Organisation ticket list } }
+    post:
+      security: [{ sessionCookie: [], csrfHeader: [] }]
+      summary: Create an idempotent support ticket within the authenticated organisation
+      responses:
+        {
+          '201': { description: Ticket persisted },
+          '401': { description: Not authenticated },
+          '403': { description: No organisation access or invalid CSRF token },
+          '422': { description: Validation error },
+        }
+  /portal/reports/{id}:
+    get:
+      security: [{ sessionCookie: [] }]
+      summary: Read report metadata within the authenticated organisation
+      parameters: [{ in: path, name: id, required: true, schema: { type: string } }]
+      responses:
+        {
+          '200': { description: Report metadata },
+          '404': { description: Not found or outside scope },
+        }
+  /admin/summary:
+    get:
+      security: [{ sessionCookie: [] }]
+      summary: Role-protected administration overview
+      responses: { '200': { description: Overview }, '403': { description: Role denied } }

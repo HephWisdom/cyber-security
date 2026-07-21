@@ -1,0 +1,34 @@
+{
+  "name": "cybersecurity-platform",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run build -w @platform/shared && concurrently -n web,api -c cyan,blue \"npm run dev -w @platform/web\" \"npm run dev -w @platform/api\"",
+    "build": "npm run build -w @platform/shared && npm run build -w @platform/web && npm run build -w @platform/api",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "eslint . --max-warnings=0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "npm run build -w @platform/shared && npm run test -w @platform/shared && npm run test -w @platform/web && npm run test -w @platform/api",
+    "test:e2e": "playwright test",
+    "seed": "npm run seed -w @platform/api",
+    "db:indexes": "npm run indexes -w @platform/api"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.30.1",
+    "@playwright/test": "^1.53.2",
+    "concurrently": "^9.2.0",
+    "eslint": "^9.30.1",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.35.1"
+  }
+}

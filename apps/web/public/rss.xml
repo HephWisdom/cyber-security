@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>ShieldStack security insights</title>
+    <link>https://example.com/insights</link>
+    <description>Practical security guidance. Company and host values are placeholders pending verification.</description>
+    <language>en</language>
+    <item>
+      <title>How to prepare for a useful security assessment</title>
+      <link>https://example.com/insights/prepare-for-a-security-assessment</link>
+      <guid>https://example.com/insights/prepare-for-a-security-assessment</guid>
+      <pubDate>Thu, 18 Jun 2026 00:00:00 GMT</pubDate>
+      <description>Five decisions that help an assessment produce a focused, actionable result.</description>
+    </item>
+  </channel>
+</rss>

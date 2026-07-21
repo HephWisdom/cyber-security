@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="ShieldStack">
+  <defs>
+    <linearGradient id="shield-stack-gradient" x1="7" x2="41" y1="5" y2="43" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38bdf8"/>
+      <stop offset=".52" stop-color="#0b63f6"/>
+      <stop offset="1" stop-color="#4338ca"/>
+    </linearGradient>
+  </defs>
+  <path d="M24 2.5 43 9v12.2c0 11.8-7.7 20-19 24.3C12.7 41.2 5 33 5 21.2V9l19-6.5Z" fill="url(#shield-stack-gradient)"/>
+  <path d="m13.5 17.5 10.5-5.7 10.5 5.7L24 23.2l-10.5-5.7Z" fill="#fff"/>
+  <path d="m13.5 23.2 10.5 5.7 10.5-5.7v4.5L24 33.4l-10.5-5.7v-4.5Z" fill="#fff" opacity=".86"/>
+  <path d="m13.5 29.4 10.5 5.7 10.5-5.7v4.5L24 39.6l-10.5-5.7v-4.5Z" fill="#fff" opacity=".62"/>
+</svg>

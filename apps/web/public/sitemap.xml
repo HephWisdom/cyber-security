@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://example.com/</loc></url>
+  <url><loc>https://example.com/services</loc></url>
+  <url><loc>https://example.com/services/security-assessments</loc></url>
+  <url><loc>https://example.com/services/penetration-testing</loc></url>
+  <url><loc>https://example.com/services/incident-readiness</loc></url>
+  <url><loc>https://example.com/services/cloud-security</loc></url>
+  <url><loc>https://example.com/services/governance-risk-compliance</loc></url>
+  <url><loc>https://example.com/solutions</loc></url>
+  <url><loc>https://example.com/industries</loc></url>
+  <url><loc>https://example.com/about</loc></url>
+  <url><loc>https://example.com/trust</loc></url>
+  <url><loc>https://example.com/insights</loc></url>
+  <url><loc>https://example.com/contact</loc></url>
+  <url><loc>https://example.com/request-assessment</loc></url>
+  <url><loc>https://example.com/report-vulnerability</loc></url>
+</urlset>

@@ -1,0 +1,49 @@
+services:
+  mongo:
+    image: mongo:8.0
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ['CMD', 'mongosh', '--quiet', '--eval', "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [platform]
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      mongo: { condition: service_healthy }
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      MONGODB_URI: mongodb://mongo:27017/cybersecurity_platform
+      WEB_ORIGIN: http://localhost:8080
+      PUBLIC_URL: http://localhost:8080
+      SESSION_COOKIE_NAME: portal_session
+      SESSION_TTL_MINUTES: 30
+      SESSION_REFRESH_TTL_DAYS: 7
+      COOKIE_SECURE: 'false'
+      TRUST_PROXY: 'true'
+      LOG_LEVEL: info
+      IP_HASH_SECRET: ${IP_HASH_SECRET:?Set IP_HASH_SECRET}
+      EMAIL_PROVIDER: console
+      EMAIL_FROM: security@example.com
+      ADMIN_NOTIFICATION_EMAIL: security@example.com
+    networks: [platform]
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    restart: unless-stopped
+    depends_on: [api]
+    ports: ['8080:8080']
+    networks: [platform]
+
+networks: { platform: {} }
+volumes: { mongo_data: {} }
