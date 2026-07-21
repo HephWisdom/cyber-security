@@ -26,7 +26,7 @@ const helmet = (
     : (helmetImport as unknown as { default: unknown }).default
 ) as (options?: Readonly<HelmetOptions>) => RequestHandler;
 
-export function createApp(env: Env) {
+export function createApp(env: Env, databaseMiddleware?: RequestHandler) {
   const app = express();
   const logger = createLogger(env);
   const email = createEmailProvider(env, logger);
@@ -87,6 +87,8 @@ export function createApp(env: Env) {
   );
   app.use(express.urlencoded({ extended: false, limit: '16kb' }));
   app.use(rejectUnsafeKeys);
+
+  if (databaseMiddleware) app.use(databaseMiddleware);
 
   const standardLimiter = rateLimit({
     windowMs: 60_000,
