@@ -10,10 +10,5 @@ export default defineConfig({
     proxy: { '/api': { target: 'http://localhost:4000', changeOrigin: true } },
   },
   preview: { port: 4173 },
-  build: {
-    outDir: '../../dist',
-    emptyOutDir: true,
-    sourcemap: false,
-    target: 'es2022',
-  },
+  build: { sourcemap: false, target: 'es2022' },
 });
